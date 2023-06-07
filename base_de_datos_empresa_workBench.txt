@@ -1,0 +1,261 @@
+#--SQL -> STRUCTURED QUERY LANGUAJE(Lenguaje Estructurado de Consulta)
+--       _
+--      | DDL -> DATA DEFINITION LANGUAJE 
+--      |  (Lenguaje de difinición de datos)  --> CREATE, ALTER, DROP
+#--SQL -> |
+--      | DML -> DATA MANIPULATION LANGUAJE 
+--      |  (Lenguaje de manipulación de datos)--> SELECT, INSERT, UPDATE, DELETE
+--      |_
+
+
+CREATE DATABASE EMPRESAB;
+
+
+CREATE TABLE DEPARTAMENTO(
+NombreDpto VARCHAR(15) NOT NULL,
+NumeroDpto INT NOT NULL,
+DniDirector CHAR(9),
+FechaIngresoDirector DATE,
+CONSTRAINT pk_departamento
+  PRIMARY KEY (NumeroDpto)
+);
+
+
+CREATE TABLE EMPLEADO(
+Nombre VARCHAR(15) NOT NULL,
+Apellido1 VARCHAR(15) NOT NULL,
+Apellido2 VARCHAR(15) NOT NULL,
+Dni CHAR(9) NOT NULL,
+FechaNac DATE,
+Direccion VARCHAR(30),
+Sexo CHAR(1),
+Sueldo int, 
+SuperDni CHAR(9),
+Dno INT NOT NULL,
+CONSTRAINT pk_empleado
+  PRIMARY KEY(Dni),
+CONSTRAINT fk_empleado_departamento
+  FOREIGN KEY (Dno)
+     REFERENCES DEPARTAMENTO(NumeroDpto),
+CONSTRAINT empleado_empleado
+    FOREIGN KEY(SuperDni) REFERENCES EMPLEADO(Dni)   
+);
+
+
+ALTER TABLE DEPARTAMENTO ADD CONSTRAINT fk_departamento_empleado
+	FOREIGN KEY (DniDirector)
+		REFERENCES EMPLEADO(Dni);
+	
+
+CREATE TABLE LOCALIZACIONES_DPTO
+(
+NumeroDpto INT NOT NULL,
+UbicacionDpto VARCHAR(15) NOT NULL,
+CONSTRAINT pk_localizaciones_dpto
+  PRIMARY KEY(NumeroDpto, UbicacionDpto),
+CONSTRAINT fk_localizaciones_dpto_departamento
+  FOREIGN KEY (NumeroDpto)
+    REFERENCES DEPARTAMENTO (NumeroDpto)
+);
+
+
+CREATE TABLE PROYECTO(
+NombreProyecto VARCHAR(15) NOT NULL,
+NumProyecto INT NOT NULL,
+UbicacionProyecto VARCHAR(20),
+NumDptoProyecto INT NOT NULL,
+CONSTRAINT pk_proyecto
+	PRIMARY KEY (NumProyecto),
+CONSTRAINT fk_proyecto_departamento
+	FOREIGN KEY (NumDptoProyecto)
+		REFERENCES DEPARTAMENTO(NumeroDpto)
+
+);
+
+
+
+CREATE TABLE TRABAJA_EN(
+DniEmpleado CHAR(9) NOT NULL,
+NumProy INT NOT NULL,
+Horas DECIMAL(3,1),
+CONSTRAINT pk_trabaja_en
+	PRIMARY KEY (DniEmpleado,NumProy),
+CONSTRAINT fk_trabaja_en_empleado
+	FOREIGN KEY (DniEmpleado)
+		REFERENCES EMPLEADO(Dni),
+CONSTRAINT fk_trabaja_en_proyecto
+	FOREIGN KEY (NumProy) 
+		REFERENCES PROYECTO(NumProyecto)
+);
+
+CREATE TABLE DEPENDIENTE(
+DniEmpleado  CHAR(9) NOT NULL,
+NombDependiente VARCHAR (15) NOT NULL,
+Sexo CHAR(1),
+FechaNac DATE,
+Relacion VARCHAR(15),
+CONSTRAINT pk_dependiente
+	PRIMARY KEY (DniEmpleado,NombDependiente),
+CONSTRAINT fk_dependente_empleado
+	FOREIGN KEY (DniEmpleado)
+		REFERENCES EMPLEADO(Dni)
+);
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- INSERTA UNA TUPLA EN LA TABLA DEPARTAMENTO 
+INSERT INTO DEPARTAMENTO (NombreDpto, NumeroDpto, DniDirector, FechaIngresoDirector)
+VALUES('Investigación',5, NULL,  '1988-05-30');
+
+INSERT INTO DEPARTAMENTO (NombreDpto, NumeroDpto, DniDirector, FechaIngresoDirector)
+VALUES('Administración',4, NULL,'1995-01-01'); 
+
+INSERT INTO DEPARTAMENTO (NombreDpto, NumeroDpto, DniDirector, FechaIngresoDirector)
+VALUES('Sede Central',1, NULL,  '1981-06-19');
+
+
+
+#-----------------------------------------------------------------------------------------------------------------
+INSERT INTO EMPLEADO(Nombre, Apellido1, Apellido2, Dni, FechaNac, Direccion, Sexo, Sueldo, SuperDni, Dno)
+VALUES('Eduardo', 'Ochoa', 'Paredes', '888665555', '1937-11-11', 'Las Peñas, 1', 'H', 55000, NULL, 1);
+
+INSERT INTO EMPLEADO(Nombre, Apellido1, Apellido2, Dni, FechaNac, Direccion, Sexo, Sueldo, SuperDni, Dno)
+VALUES('Alberto', 'Campos', 'Sastre', '333445555', '1955-08-12', 'Avda. Ríos, 9', 'H', 40000, '888665555', 5);
+
+
+INSERT INTO EMPLEADO(Nombre, Apellido1, Apellido2, Dni, FechaNac, Direccion, Sexo, Sueldo, SuperDni, Dno)
+VALUES('Juana', 'Sainz', 'Oreja', '987654321', '1941-06-20', 'Cerquillas, 67', 'M', 43000, '888665555', 4);
+
+
+INSERT INTO EMPLEADO(Nombre, Apellido1, Apellido2, Dni, FechaNac, Direccion, Sexo, Sueldo, SuperDni, Dno)
+VALUES('José', 'Pérez', 'Pérez', '123456789', '1965-09-01', 'Eloy l,98', 'H', 30000, '333445555', 5);
+
+
+INSERT INTO EMPLEADO(Nombre, Apellido1, Apellido2, Dni, FechaNac, Direccion, Sexo, Sueldo, SuperDni, Dno)
+VALUES('Fernando', 'Ojeda', 'Ordóñez', '666884444','1962-09-15', 'Portillo, s/n', 'H', 38000, '333445555', 5);
+
+
+INSERT INTO EMPLEADO(Nombre, Apellido1, Apellido2, Dni, FechaNac, Direccion, Sexo, Sueldo, SuperDni, Dno)
+VALUES('Aurora', 'Oliva', 'Avezuela', '453453453', '1972-07-31', 'Antón, 6', 'M', 25000, '333445555', 5);
+
+INSERT INTO EMPLEADO(Nombre, Apellido1, Apellido2, Dni, FechaNac, Direccion, Sexo, Sueldo, SuperDni, Dno)
+VALUES('Alicia', 'Jiménez', 'Celaya', '999887777', '1968-05-12', 'Gran Vía, 38', 'M', 25000, '987654321',4);
+
+INSERT INTO EMPLEADO(Nombre, Apellido1, Apellido2, Dni, FechaNac, Direccion, Sexo, Sueldo, SuperDni, Dno)
+VALUES('Luis', 'Pajares', 'Morera', '987987987', '1969-03-29', 'Enebros, 90', 'H', 25000, '987654321',4);
+
+INSERT INTO EMPLEADO(Nombre, Apellido1, Apellido2, Dni, FechaNac, Direccion, Sexo, Sueldo, SuperDni, Dno)
+VALUES('Juan', 'Alvarez', 'Torres', '246802468','1979-04-30', 'Linares, 35', 'H', 45000, '987654321',1);
+
+-----  MODIFICAR DATO Dni Director---
+UPDATE DEPARTAMENTO SET DniDirector = '333445555' WHERE NumeroDpto = 5;
+UPDATE DEPARTAMENTO SET DniDirector = '987654321' WHERE NumeroDpto = 4;
+UPDATE DEPARTAMENTO SET DniDirector = '888665555' WHERE NumeroDpto = 1;
+
+
+INSERT INTO LOCALIZACIONES_DPTO(NumeroDpto, UbicacionDpto)
+VALUES(1, 'Madrid');
+
+INSERT INTO LOCALIZACIONES_DPTO(NumeroDpto, UbicacionDpto)
+VALUES(4, 'Gijón');
+
+INSERT INTO LOCALIZACIONES_DPTO(NumeroDpto, UbicacionDpto)
+VALUES(5, 'Valencia');
+
+INSERT INTO LOCALIZACIONES_DPTO(NumeroDpto, UbicacionDpto)
+VALUES(5, 'Sevilla');
+
+INSERT INTO LOCALIZACIONES_DPTO(NumeroDpto, UbicacionDpto)
+VALUES(5, 'Madrid');
+
+
+INSERT INTO PROYECTO(NombreProyecto, NumProyecto,UbicacionProyecto, NumDptoProyecto)
+VALUES('ProductoX', 1, 'Valencia', 5);
+
+INSERT INTO PROYECTO(NombreProyecto, NumProyecto,UbicacionProyecto, NumDptoProyecto)
+VALUES('ProductoY', 2, 'Sevilla', 5);
+
+INSERT INTO PROYECTO(NombreProyecto, NumProyecto,UbicacionProyecto, NumDptoProyecto)
+VALUES('ProductoZ', 3, 'Madrid', 5);
+
+INSERT INTO PROYECTO(NombreProyecto, NumProyecto,UbicacionProyecto, NumDptoProyecto)
+VALUES('Computación', 10, 'Gijón', 4);
+
+INSERT INTO PROYECTO(NombreProyecto, NumProyecto,UbicacionProyecto, NumDptoProyecto)
+VALUES('Reorganización', 20, 'Madrid', 1);
+
+INSERT INTO PROYECTO(NombreProyecto, NumProyecto,UbicacionProyecto, NumDptoProyecto)
+VALUES('Comunicaciones', 30, 'Gijón', 4);
+
+ 
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('123456789',1, 32.5);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('123456789',2, 7.5);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('666884444', 3, 40.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('453453453', 1, 20.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('453453453', 2, 20.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('333445555', 2, 10.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('333445555', 3, 10.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('333445555', 10, 10.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('333445555', 20, 10.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('999887777', 30, 30.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('999887777', 10, 10.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('987987987', 10, 35.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('987987987', 30, 5.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('987654321', 30, 20.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('987654321', 20, 15.0);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('888665555', 20, NULL);
+
+INSERT INTO TRABAJA_EN(DniEmpleado, NumProy, Horas)
+VALUES('246802468', 20, NULL);
+
+
+
+INSERT INTO DEPENDIENTE(DniEmpleado, NombDependiente, Sexo, FechaNac, Relacion)
+VALUES('333445555', 'Alicia', 'M', '1986-04-05', 'Hija');
+
+INSERT INTO DEPENDIENTE(DniEmpleado, NombDependiente, Sexo, FechaNac, Relacion)
+VALUES('333445555', 'Teodoro', 'H','1983-10-25', 'Hijo');
+
+INSERT INTO DEPENDIENTE(DniEmpleado, NombDependiente, Sexo, FechaNac, Relacion)
+VALUES('333445555', 'Luisa', 'M','1958-03-04', 'Esposa');
+
+INSERT INTO DEPENDIENTE(DniEmpleado, NombDependiente, Sexo, FechaNac, Relacion)
+VALUES('987654321', 'Alfonso', 'H','1942-28-02', 'Esposo');
+
+INSERT INTO DEPENDIENTE(DniEmpleado, NombDependiente, Sexo, FechaNac, Relacion)
+VALUES('123456789', 'Miguel', 'H','1988-01-04',  'Hijo');
+
+INSERT INTO DEPENDIENTE(DniEmpleado, NombDependiente, Sexo, FechaNac, Relacion)
+VALUES('123456789', 'Alicia', 'M', '1988-12-30', 'Hija');
+
+
